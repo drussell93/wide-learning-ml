@@ -2,7 +2,6 @@
 '''
 Cifar-10 classification
 See: https://www.cs.toronto.edu/~kriz/cifar.html for more information
-
 USAGE:
 python cifar10_cnn.py --load-model 1 --weights cifr10_weights.hdf5
 or
@@ -124,13 +123,14 @@ if __name__ == '__main__':
 
     print('CIFAR-10 Classification')
 
-    cifar10 = Cifar10(data_folder='/home/dp/Downloads/cifar-10-batches-py/')
+    cifar10 = Cifar10(data_folder='/home/doug/Downloads/cifar-10-batches2-py/')
 
     # Create Keras model
     model = Sequential()
 
     model.add(Convolution2D(32, 3, 3, border_mode='valid', activation='relu',
-                            input_shape=(cifar10.n_components, cifar10.image_height, cifar10.image_width)))
+                            input_shape=(cifar10.n_components, cifar10.image_height, cifar10.image_width))) #, dim_ordering="th"
+
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Convolution2D(64, 3, 3, border_mode='valid', activation='relu'))
