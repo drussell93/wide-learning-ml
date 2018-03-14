@@ -66,7 +66,7 @@ if __name__ == '__main__':
 # Get weights path from args
     weightsPath=args["weights"] if args["load_model"] > 0 else None
 
-print('Dogs vs Cats Classification')
+print 'Dogs vs Cats Classification'
 
 # Filepath of dataset
 data = Data(data_folder='/home/doug/Downloads/data/')
@@ -98,18 +98,18 @@ if weightsPath is not None:
     model.load_weights(weightsPath)
 
 # Compile model 
-print("[INFO] compiling model...")
+print "[INFO] compiling model..."
 #model.compile(loss='categorical_crossentropy', optimizer='Adadelta', metrics=['accuracy'])
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
 # Fit model if no model is to be loaded
 if args["load_model"] < 0:
-    print('Fitting model')
+    print 'Fitting model' 
     model.fit_generator(data.training_generator, samples_per_epoch=data.training_set_size, nb_epoch=data.n_epochs, validation_data=data.testing_generator, nb_val_samples=data.test_set_size)
 
 # Saved model to file if param (-s 1) included
 if args["save_model"] > 0:
-    print('[INFO] dumping weights to file')
+    print '[INFO] dumping weights to file' 
     model.save_weights(args["weights"], overwrite=True)
 
 
@@ -131,9 +131,11 @@ print(classes)
 '''
 
 # Show classes
-print('\nClasses: ', data.training_generator.class_indices)
+print '\nClasses: ', data.training_generator.class_indices
 
 # Test dogs 
+print '\nDOG TRAINING'
+
 num_dogs_guessed = 0
 num_cats_guessed = 0
 
@@ -145,10 +147,10 @@ for i in range(9):
     probs = model.predict_classes(image)
     print(probs)
     if probs == 0:
-        print('cat')
+        print 'cat'
         num_cats_guessed += 1
     if probs == 1:
-        print('dog')
+        print 'dog'
         num_dogs_guessed += 1
     
     # Show image
@@ -156,11 +158,12 @@ for i in range(9):
     imgplot = plt.imshow(img)
     plt.show()
 
-print ('\n\nDog training')
-print('Dogs guessed: %d' % num_dogs_guessed, ' Cats guessed: %d' % num_cats_guessed)
+print '\nDogs guessed: %d' % num_dogs_guessed, ' Cats guessed: %d' % num_cats_guessed, '\n'
 
 
 # Test cats
+print'\nCAT TRAINING'
+
 num_dogs_guessed = 0
 num_cats_guessed = 0
 
@@ -172,10 +175,10 @@ for i in range(9):
     probs = model.predict_classes(image)
     print(probs)
     if probs == 0:
-        print('cat')
+        print 'cat'
         num_cats_guessed += 1
     if probs == 1:
-        print('dog')
+        print 'dog'
         num_dogs_guessed += 1
     
     # Show image
@@ -183,14 +186,13 @@ for i in range(9):
     imgplot = plt.imshow(img)
     plt.show()
 
-print('\n\nCat training')
-print("Dogs guessed: %d" % num_dogs_guessed, ' Cats guessed: %d' % num_cats_guessed)
+print "\nDogs guessed: %d" % num_dogs_guessed, ' Cats guessed: %d' % num_cats_guessed, '\n'
 
 # Evaluate overall model
-print("\n\nEvaluating model")
-score = model.evaluate_generator(data.testing_generator)
+print "\n\nEvaluating model ... Please wait a few minutes"
+score = model.evaluate_generator(data.testing_generator, 1000)
 
-print('Score: %1.3f' % score[0])
-print('Accuracy: %1.3f' % score[1])
+print 'Score: %1.3f' % score[0] 
+print 'Accuracy: %1.3f' % score[1] 
 
 
