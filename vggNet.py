@@ -33,7 +33,7 @@ np.random.seed()
 
 
 class Data(object):
-    def __init__(self, data_folder, image_width=224, image_height=224, n_components=3, training_set_size=4000, test_set_size=973, n_classes=10, n_epochs=1):
+    def __init__(self, data_folder, image_width=224, image_height=224, n_components=3, training_set_size=4000, test_set_size=973, n_classes=10, n_epochs=60):
 
         self.data_folder = data_folder
         self.image_width = image_width
@@ -47,11 +47,11 @@ class Data(object):
         train_data_dir = data_folder + 'training'
         test_data_dir = data_folder + 'testing'
 
-		# Rescale  the images and apply noise to the training dataset 
+        # Rescale  the images and apply noise to the training dataset 
         train_data = ImageDataGenerator(rescale=1./255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
         test_data = ImageDataGenerator(rescale=1./255)
 
-		# Generator gives output of a tuple in form: (inputs, targets)
+        # Generator gives output of a tuple in form: (inputs, targets)
         self.training_generator = train_data.flow_from_directory(train_data_dir, target_size=(image_height, image_width), batch_size=10, class_mode='categorical')
         self.testing_generator = test_data.flow_from_directory(test_data_dir, target_size=(image_height, image_width), batch_size=10, class_mode='categorical')
 
@@ -113,7 +113,7 @@ if args["load_model"] < 0:
     print ('Fitting model') 
     results = model.fit_generator(data.training_generator, samples_per_epoch=data.training_set_size, nb_epoch=data.n_epochs, validation_data=data.testing_generator, nb_val_samples=data.test_set_size)
 	
-	#  "Accuracy"
+    #  "Accuracy"
     plt.plot(results.history['acc'])
     plt.plot(results.history['val_acc'])
     plt.title('Model Accuracy')
@@ -121,7 +121,7 @@ if args["load_model"] < 0:
     plt.xlabel('Epoch')
     plt.legend(['Training', 'Testing'], loc='upper left')
     plt.show()
-	# "Loss"
+    # "Loss"
     plt.plot(results.history['loss'])
     plt.plot(results.history['val_loss'])
     plt.title('Model Loss')
