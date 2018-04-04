@@ -1,9 +1,9 @@
 #!/usr/bin/python
 '''
 USAGE:
-python cifar10_cnn.py --load-model 1 --weights cifr10_weights.hdf5
+python vggNet.py --load-model 1 --weights tiny-net-weights.hdf5
 or
-python cifar10_cnn.py --save-model 1 --weights cifr10_weights.hdf5
+python vggNet.py --save-model 1 --weights .hdf5
 '''
 
 import matplotlib.pyplot as plt
@@ -64,6 +64,7 @@ print('VGG-A CNN')
 
 # Filepath of dataset
 data = Data(data_folder='C:/Users/Doug/Py/Data/tiny-net-data/')
+#data = Data(data_folder='C:/Users/Doug/Py/Data/medium-cats-dogs-data/')
 
 model = Sequential()
 
@@ -97,7 +98,7 @@ model.add(Dense(4096, activation='relu', init='glorot_normal'))
 model.add(Dropout(0.5)) 
 model.add(Dense(4096, activation='relu', init='glorot_normal')) 
 model.add(Dropout(0.5)) 
-model.add(Dense(10, name='dense_classifier', activation='softmax', init='glorot_normal'))
+model.add(Dense(10, name='dense_classifier', activation='softmax', init='glorot_normal')) #
 
 # Load weights path (for reading or saving) if param (-w 1) included
 if weightsPath is not None:
@@ -105,7 +106,7 @@ if weightsPath is not None:
 
 # Compile model 
 print ("[INFO] compiling model...")
-sgd = SGD(lr=0.001, decay=5e-4, momentum=0.9, nesterov=True) 
+sgd = SGD(lr=0.01, decay=5e-4, momentum=0.9, nesterov=True) 
 model.compile(optimizer=sgd, loss='categorical_crossentropy',metrics=['accuracy'])
 
 # Fit model if no model is to be loaded
@@ -138,6 +139,85 @@ if args["save_model"] > 0:
 
 # Show classes
 print ('\nClasses: ', data.training_generator.class_indices)
+
+# Manual testing
+for i in range(10):
+    
+	# Read in image
+    if i == 0:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/banana/n07753592_13594.jpeg')
+    elif i == 1:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/baseball/n09835506_28350.jpeg')
+    elif i == 2:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/burrito/n07880968_5552.jpeg')
+    elif i == 3:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/coffee/n07930864_32444.jpeg')
+    elif i == 4:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/manta-ray/n01495701_14486.jpeg')
+    elif i == 5:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/pizza/n07873807_9924.jpeg')
+    elif i == 6:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/rooster/n01514668_18281.jpeg')
+    elif i == 7:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/scuba/n10565667_9855.jpeg')
+    elif i == 8:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/stoplight/n06874185_25763.jpeg')
+    elif i == 9:
+        image = cv2.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/wedding/n10148035_28896.jpeg')
+	
+    image = cv2.resize(image, (224,224))
+    image = np.expand_dims(image, axis=0)
+    image = np.reshape(image,[1,3,224,224])
+	
+	# Prediction
+    probs = model.predict_classes(image)
+    print(probs)
+    if probs == 0:
+        print ('banana')      
+    if probs == 1:
+        print ('baseball')
+    if probs == 2:
+        print ('burrito')
+    if probs == 3:
+        print ('coffee')
+    if probs == 4:
+        print ('manta ray')
+    if probs == 5:
+        print ('pizza')
+    if probs == 6:
+        print ('rooster')
+    if probs == 7:
+        print ('scuba diver')
+    if probs == 8:
+        print ('stoplight')
+    if probs == 9:
+        print ('wedding attire')
+		
+    # Show image
+    if i == 0:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/banana/n07753592_13418.jpeg')
+    elif i == 1:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/baseball/n09835506_28350.jpeg')
+    elif i == 2:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/burrito/n07880968_5552.jpeg')
+    elif i == 3:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/coffee/n07930864_32444.jpeg')
+    elif i == 4:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/manta-ray/n01495701_14486.jpeg')
+    elif i == 5:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/pizza/n07873807_9924.jpeg')
+    elif i == 6:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/rooster/n01514668_18281.jpeg')
+    elif i == 7:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/scuba/n10565667_9855.jpeg')
+    elif i == 8:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/stoplight/n06874185_25763.jpeg')
+    elif i == 9:
+        img=mpimg.imread('C:/Users/Doug/Py/Data/tiny-net-data/testing/wedding/n10148035_28896.jpeg')
+		
+    imgplot = plt.imshow(img)
+    plt.show()
+
 
 # Evaluate overall model
 print ("\n\nEvaluating model ... Please wait a few minutes")
